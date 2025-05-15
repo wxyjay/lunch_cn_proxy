@@ -113,22 +113,6 @@ if [ "$installed" = "false" ]; then
       ;;
   esac
 
-  echo -e "\n请选择 HTTP 代理端口:\n1) 默认 (9000)\n2) 自定义"
- read -p "请选择 (1 或 2): " server_choice
-  server_address=""
-  case "$server_choice" in
-    1)
-      echo "使用默认服务器地址。"
-      ;;
-    2)
-      read -p "请输入自定义服务器地址: " server_address
-      ;;
-    *)
-      echo "无效的选择，使用默认服务器地址。"
-      sleep 0.25
-      ;;
-  esac
-
   read -p "请选择 HTTP 代理端口 (默认 9000): " port
   if [[ -z "$port" ]]; then
     port="9000"
