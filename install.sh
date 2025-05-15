@@ -191,7 +191,7 @@ menu() {
   echo "(4) 停止服务"
   echo "(5) 卸载服务"
   echo "(6) 查看当前端口"
-  echo "(7) 查看/修改服务器地址"
+  echo "(7) 修改服务器端口"
   echo "(8) 修改服务器地址"
   echo "(q) 退出"
   echo "---------------------------------------------------------"
@@ -224,39 +224,32 @@ menu() {
       port=$(grep -oP '-p \K\S+' "$START_SCRIPT")
       echo "当前端口: ${port:-9000}"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
     7)
-      server_address=$(grep -oP '-r \K\S+' "$START_SCRIPT")
-      if [ -z "$server_address" ]; then
-        echo "当前服务器地址: 默认"
-        read -p "请输入新的服务器地址 (留空使用默认): " new_server_address
-        run_root_command systemctl stop "$SERVICE_NAME"
-        if [ -z "$new_server_address" ]; then
-          sed -i "s/.*-r .*/./thread_socket -p $port/g" "$START_SCRIPT"
-        else
-          echo "修改 $START_SCRIPT 中的服务器地址为: $new_server_address"
-          sed -i "s/.*-r .*/./thread_socket -p \\"$port\\" -r \\"$new_server_address\\"/g" "$START_SCRIPT"
-        fi
-        run_root_command systemctl start "$SERVICE_NAME"
-      else
-        echo "当前服务器地址: $server_address"
-        read -p "请输入新的服务器地址 (留空使用默认): " new_server_address
-        run_root_command systemctl stop "$SERVICE_NAME"
-        if [ -z "$new_server_address" ]; then
-          sed -i "s/.*-r .*/./thread_socket -p $port/g" "$START_SCRIPT"
-        else
-          echo "修改 $START_SCRIPT 中的服务器地址为: $new_server_address"
-          sed -i "s/.*-r .*/./thread_socket -p \\"$port\\" -r \\"$new_server_address\\"/g" "$START_SCRIPT"
-        fi
-        run_root_command systemctl start "$SERVICE_NAME"
+      echo -e "当前端口: ${port:-9000}"
+      read -p "请输入新的端口 (纯数字, 留空使用默认 9000): " new_port
+      if [[ -z "$new_port" ]]; then
+        new_port="9000"
+        echo "使用默认端口 9000。"
+      elif [[ ! "$new_port" =~ ^[0-9]+$ ]]; then
+        echo "无效的端口，使用默认端口 9000。"
+        new_port="9000"
       fi
+      run_root_command systemctl stop "$SERVICE_NAME"
+      sed -i "s/thread_socket -p .*/thread_socket -p $new_port/" "$START_SCRIPT"
+      run_root_command systemctl start "$SERVICE_NAME"
       read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
     8)
+      server_address=$(grep -oP '-r \K\S+' "$START_SCRIPT")
+      echo "当前服务器地址: ${server_address:-默认}"
       read -p "请输入新的服务器地址 (留空使用默认): " new_server_address
       run_root_command systemctl stop "$SERVICE_NAME"
       if [ -z "$new_server_address" ]; then
-        sed -i "s/.*-r .*/./thread_socket -p $port/g" "$START_SCRIPT"
+        sed -i "s/thread_socket -p [0-9]* -r .*/thread_socket -p $port/" "$START_SCRIPT"
+        sed -i "s/thread_socket -p [0-9]*/thread_socket -p $port/" "$START_SCRIPT"
+        echo "使用默认服务器地址 (无)。"
       else
-        echo "修改 $START_SCRIPT 中的服务器地址为: $new_server_address"
-        sed -i "s/.*-r .*/./thread_socket -p \\"$port\\" -r \\"$new_server_address\\"/g" "$START_SCRIPT"
+        sed -i "s/thread_socket -p [0-9]* -r .*/thread_socket -p $port -r $new_server_address/" "$START_SCRIPT"
+        sed -i "s/thread_socket -p [0-9]*/thread_socket -p $port -r $new_server_address/" "$START_SCRIPT"
+        echo "服务器地址已修改为: $new_server_address"
       fi
       run_root_command systemctl start "$SERVICE_NAME"
       read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
