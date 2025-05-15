@@ -174,7 +174,7 @@ EOL
   run_command systemctl status cn_http_proxy
 fi
 
-cat > lunch_proxy <<EOL
+cat > lunch_proxy <<'EOL'
 #!/bin/bash
 
 SERVICE_NAME="cn_http_proxy"
@@ -202,10 +202,8 @@ menu() {
   echo "(8) 修改服务器地址"
   echo "(q) 退出"
   echo "---------------------------------------------------------"
-
-  # 尝试使用更基础的 read 命令
-  read choice
-
+  choice=""
+  read -p "请选择: " choice
   echo "您输入的字符是: '$choice'"
   choice=$(echo "$choice" | tr -d '[:space:]')
 
@@ -277,5 +275,7 @@ menu() {
 menu
 EOL
 chmod +x lunch_proxy
+sudo mv lunch_proxy /usr/local/bin/lunch_proxy
+sudo chmod +x /usr/local/bin/lunch_proxy
 echo "\n已创建 'lunch_proxy' 菜单。后续在终端中输入 './lunch_proxy' 即可打开菜单。"
 ./lunch_proxy
