@@ -24,7 +24,7 @@ display_banner() {
 EOF
     echo
 }
-
+clear
 display_banner
 
 echo -e "\n安装程序即将启动，按住 Ctrl + C 以取消..."
@@ -109,36 +109,43 @@ if [ "$installed" = "false" ]; then
       ;;
     *)
       echo "无效的选择，使用默认服务器地址。"
+      sleep 0.25
       ;;
   esac
 
   echo -e "\n请选择 HTTP 代理端口:\n1) 默认 (9000)\n2) 自定义"
-  read -p "请选择 (1 或 2): " port_choice
-  port="9000"
-  case "$port_choice" in
+ read -p "请选择 (1 或 2): " server_choice
+  server_address=""
+  case "$server_choice" in
     1)
-      echo "使用默认端口 9000。"
+      echo "使用默认服务器地址。"
       ;;
     2)
-      read -p "请输入自定义端口 (纯数字): " custom_port
-      if [[ "$custom_port" =~ ^[0-9]+$ ]]; then
-        port="$custom_port"
-      else
-        echo "无效的端口，使用默认端口 9000。"
-      fi
+      read -p "请输入自定义服务器地址: " server_address
       ;;
     *)
-      echo "无效的选择，使用默认端口 9000。"
+      echo "无效的选择，使用默认服务器地址。"
+      sleep 0.25
       ;;
   esac
 
+  read -p "请选择 HTTP 代理端口 (默认 9000): " port
+  if [[ -z "$port" ]]; then
+    port="9000"
+    echo "使用默认端口 9000。"
+  elif [[ ! "$port" =~ ^[0-9]+$ ]]; then
+    echo "无效的端口，使用默认端口 9000。"
+    port="9000"
+  fi
+
   echo "\n创建 启动脚本：start.sh ..."
+  sleep 0.25
   cat > start.sh <<EOL
 #!/bin/bash
-if [ -z "$SERVER_ADDRESS" ]; then
-  ./thread_socket -p $PORT
+if [ -z "$server_address" ]; then
+  ./thread_socket -p $port
 else
-  ./thread_socket -p $PORT -r $SERVER_ADDRESS
+  ./thread_socket -p $port -r $server_address
 fi
 EOL
   chmod +x start.sh
@@ -265,4 +272,5 @@ chmod +x lunch_proxy
 sudo mv lunch_proxy /usr/local/bin/lunch_proxy
 sudo chmod +x /usr/local/bin/lunch_proxy
 echo "\n已创建 'lunch_proxy' 菜单；后续在终端中输入 'lunch_proxy' 即可打开菜单。"
+sleep 0.5
 lunch_proxy
