@@ -136,9 +136,9 @@ if [ "$installed" = "false" ]; then
   cat > start.sh <<EOL
 #!/bin/bash
 if [ -z "$SERVER_ADDRESS" ]; then
-  ./thread_socket -p "$PORT"
+  ./thread_socket -p $PORT
 else
-  ./thread_socket -p "$PORT" -r "$SERVER_ADDRESS"
+  ./thread_socket -p $PORT -r $SERVER_ADDRESS
 fi
 EOL
   chmod +x start.sh
@@ -230,7 +230,7 @@ menu() {
         read -p "请输入新的服务器地址 (留空使用默认): " new_server_address
         run_root_command systemctl stop "$SERVICE_NAME"
         if [ -z "$new_server_address" ]; then
-          sed -i "s/.*-r .*/./thread_socket -p \\"$port\\"/g" "$START_SCRIPT"
+          sed -i "s/.*-r .*/./thread_socket -p $port/g" "$START_SCRIPT"
         else
           echo "修改 $START_SCRIPT 中的服务器地址为: $new_server_address"
           sed -i "s/.*-r .*/./thread_socket -p \\"$port\\" -r \\"$new_server_address\\"/g" "$START_SCRIPT"
@@ -241,7 +241,7 @@ menu() {
         read -p "请输入新的服务器地址 (留空使用默认): " new_server_address
         run_root_command systemctl stop "$SERVICE_NAME"
         if [ -z "$new_server_address" ]; then
-          sed -i "s/.*-r .*/./thread_socket -p \\"$port\\"/g" "$START_SCRIPT"
+          sed -i "s/.*-r .*/./thread_socket -p $port/g" "$START_SCRIPT"
         else
           echo "修改 $START_SCRIPT 中的服务器地址为: $new_server_address"
           sed -i "s/.*-r .*/./thread_socket -p \\"$port\\" -r \\"$new_server_address\\"/g" "$START_SCRIPT"
@@ -253,7 +253,7 @@ menu() {
       read -p "请输入新的服务器地址 (留空使用默认): " new_server_address
       run_root_command systemctl stop "$SERVICE_NAME"
       if [ -z "$new_server_address" ]; then
-        sed -i "s/.*-r .*/./thread_socket -p \\"$port\\"/g" "$START_SCRIPT"
+        sed -i "s/.*-r .*/./thread_socket -p $port/g" "$START_SCRIPT"
       else
         echo "修改 $START_SCRIPT 中的服务器地址为: $new_server_address"
         sed -i "s/.*-r .*/./thread_socket -p \\"$port\\" -r \\"$new_server_address\\"/g" "$START_SCRIPT"
