@@ -1,8 +1,10 @@
 #!/bin/bash
 
-PINK='\033[1;95m'
-SILVER='\033[1;37m'
-CYAN='\033[1;96m'
+PINK='\033[1;35m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+RED='\033[0;31m'
 NC='\033[0m'
 
 
@@ -14,42 +16,31 @@ run_command() {
   fi
 }
 
-print_animated_line() {
-  local line="$1"
-  echo -ne "${PINK}${line}${NC}\n"
-  sleep 0.05
-}
-
-
 display_mosaic() {
   clear
-  lines=(
-    "=================================================="
-    "##                                              ##"
-    "##   MM  MM   AAAA   DDDD  EEEEEE                ##"
-    "##   MMM MMM  AA AA  DD DD EE                    ##"
-    "##   MM MM MM AAAAAA DD  DD EEEE                  ##"
-    "##   MM  MM  AA AA  DD DD EE                    ##"
-    "##   MM  MM  AA AA  DDDD  EEEEEE                ##"
-    "##                                              ##"
-    "##   BBBBBB   YY  YY                             ##"
-    "##   BB   BB   YY YY                             ##"
-    "##   BBBBBB    YYYY                              ##"
-    "##   BB   BB    YY                               ##"
-    "##   BBBBBB    YY                               ##"
-    "##                                              ##"
-    "##   LL      UU UU NNNN NN CCCCCC HH  HH         ##"
-    "##   LL      UU UU NN NNNN CC     HH  HH         ##"
-    "##   LL      UU UU NN  NNN CC     HHHHHH         ##"
-    "##   LL      UU UU NN   NN CC     HH  HH         ##"
-    "##   LLLLLL   UUUU  NN    N CCCCCC HH  HH         ##"
-    "##                                              ##"
-    "=================================================="
-  )
-
-  for line in "${lines[@]}"; do
-    print_animated_line "$line"
-  done
+  echo -e "${PINK}"
+  echo "=================================================="
+  echo "##                                              ##"
+  echo "##   MM  MM   AAAA   DDDD  EEEEEE                ##"
+  echo "##   MMM MMM  AA AA  DD DD EE                    ##"
+  echo "##   MM MM MM AAAAAA DD  DD EEEE                  ##"
+  echo "##   MM  MM  AA AA  DD DD EE                    ##"
+  echo "##   MM  MM  AA AA  DDDD  EEEEEE                ##"
+  echo "##                                              ##"
+  echo "##   BBBBBB   YY  YY                             ##"
+  echo "##   BB   BB   YY YY                             ##"
+  echo "##   BBBBBB    YYYY                              ##"
+  echo "##   BB   BB    YY                               ##"
+  echo "##   BBBBBB    YY                               ##"
+  echo "##                                              ##"
+  echo "##   LL      UU UU NNNN NN CCCCCC HH  HH         ##"
+  echo "##   LL      UU UU NN NNNN CC     HH  HH         ##"
+  echo "##   LL      UU UU NN  NNN CC     HHHHHH         ##"
+  echo "##   LL      UU UU NN   NN CC     HH  HH         ##"
+  echo "##   LLLLLL   UUUU  NN    N CCCCCC HH  HH         ##"
+  echo "##                                              ##"
+  echo "=================================================="
+  echo -e "${NC}"
 }
 
 display_mosaic
