@@ -1,11 +1,10 @@
 #!/bin/bash
 
-PINK='\033[1;35m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-RED='\033[0;31m'
+PINK='\033[1;95m'
+SILVER='\033[1;37m'
+CYAN='\033[1;96m'
 NC='\033[0m'
+DELAY=0.1
 
 
 run_command() {
@@ -16,34 +15,50 @@ run_command() {
   fi
 }
 
-display_mosaic() {
+display_frame() {
   clear
   echo -e "${PINK}"
-  echo "=================================================="
-  echo "##                                              ##"
-  echo "##   MM  MM   AAAA   DDDD  EEEEEE                ##"
-  echo "##   MMM MMM  AA AA  DD DD EE                    ##"
-  echo "##   MM MM MM AAAAAA DD  DD EEEE                  ##"
-  echo "##   MM  MM  AA AA  DD DD EE                    ##"
-  echo "##   MM  MM  AA AA  DDDD  EEEEEE                ##"
-  echo "##                                              ##"
-  echo "##   BBBBBB   YY  YY                             ##"
-  echo "##   BB   BB   YY YY                             ##"
-  echo "##   BBBBBB    YYYY                              ##"
-  echo "##   BB   BB    YY                               ##"
-  echo "##   BBBBBB    YY                               ##"
-  echo "##                                              ##"
-  echo "##   LL      UU UU NNNN NN CCCCCC HH  HH         ##"
-  echo "##   LL      UU UU NN NNNN CC     HH  HH         ##"
-  echo "##   LL      UU UU NN  NNN CC     HHHHHH         ##"
-  echo "##   LL      UU UU NN   NN CC     HH  HH         ##"
-  echo "##   LLLLLL   UUUU  NN    N CCCCCC HH  HH         ##"
-  echo "##                                              ##"
-  echo "=================================================="
+  echo "MMMM MMMMM MMMMM  MMMMM MMMM  LLLLL U   U NNNN  NN CCCC HH  HH"
+  echo "MM  M M   M M      M   M M   M L     U   U NN NN NN C    HH  HH"
+  echo "MM  M MMMM M MMM    MMMMM MMMM  L     U   U NN  NNN C    HHHHHH"
+  echo "MM  M M   M M      M   M M   M L     U   U NN   NN C    HH  HH"
+  echo "MMMM  MMMMM MMMMM  M   M M   M LLLLL UUUUU NN    NN CCCCC HH  HH"
+  echo "                                                               "
+  echo "BBBB  YY  YY       LLLLL U   U NNNN  CC HH  HH"
+  echo "B   B YY  YY       L     U   U NN NN CC HH  HH"
+  echo "BBBB   YYYY        L     U   U NN  NN CC HHHHHH"
+  echo "B   B  YY         L     U   U NN   NN CC HH  HH"
+  echo "BBBB   YY         LLLLL UUUUU NN    NN CCCCC HH  HH"
   echo -e "${NC}"
 }
 
-display_mosaic
+display_frame2() {
+  clear
+  echo -e "${PINK}"
+  echo "MMMMM MMMMM MMMMM  MMMMM MMMM  LLLLL U   U NNNN  NN CCCCC HH  HH"
+  echo "MM  M M   M M      M   M M   M L     U   U NN NN NN CC    HH  HH"
+  echo "MM  M MMMM M MMM    MMMMM MMMM  L     U   U NN  NNN CC    HHHHHH"
+  echo "MM  M M   M M      M   M M   M L     U   U NN   NN CC    HH  HH"
+  echo "MMMMM MMMMM MMMMM  M   M M   M LLLLL UUUUU NN    NN CCCCC HH  HH"
+  echo "                                                               "
+  echo "BBBBB YY  YY       LLLLL U   U NNNN  C HH  HH"
+  echo "B   B YY  YY       L     U   U NN NN C  HH  HH"
+  echo "BBBBB  YYYY        L     U   U NN  NN C  HHHHHH"
+  echo "B   B  YY         L     U   U NN   NN C  HH  HH"
+  echo "BBBBB  YY         LLLLL UUUUU NN    NN CCCCC HH  HH"
+  echo -e "${NC}"
+}
+
+animate_mosaic() {
+  for i in {1..10}; do
+    display_frame
+    sleep $DELAY
+    display_frame2
+    sleep $DELAY
+  done
+}
+
+animate_mosaic
 
 echo -e "\n安装程序即将启动，按住 Ctrl + C 以取消..."
 sleep 5
