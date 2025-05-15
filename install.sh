@@ -34,9 +34,11 @@ clear
 echo "检查是否已安装 cn_http_proxy 服务..."
 if systemctl is-enabled cn_http_proxy --quiet && systemctl is-active cn_http_proxy --quiet; then
   echo "cn_http_proxy 服务已安装并运行。"
+  sleep 1
   installed=true
 else
   echo "未发现 cn_http_proxy 服务。"
+  sleep 0.5
   installed=false
 fi
 
@@ -44,12 +46,18 @@ if [ "$installed" = "false" ]; then
 
   echo "\n创建目录 /etc/lunchkit 和 /etc/lunchkit/cn_http_proxy ..."
   run_command mkdir -p /etc/lunchkit/cn_http_proxy
+  sleep 0.5
 
   echo "解压 lunch_proxy.zip 到 /etc/lunchkit/cn_http_proxy ..."
+  sleep 0.5
   if [ -f "lunch_proxy.zip" ]; then
-    run_command unzip -d /etc/lunchkit/cn_http_proxy lunch_proxy.zip
+  
+    run_command unzip -o lunch_proxy.zip -d temp_lunch_dir
+    run_command cp -r temp_lunch_dir/lunch_cn_proxy-main/* /etc/lunchkit/cn_http_proxy/
+    rm -rf temp_lunch_dir
 
     echo "删除 lunch_proxy.zip ..."
+    sleep 0.5
     rm -f lunch_proxy.zip
   else
     echo "错误: 当前目录下找不到 lunch_proxy.zip 文件，请确保该文件存在。"
@@ -58,14 +66,16 @@ if [ "$installed" = "false" ]; then
 
   cd /etc/lunchkit/cn_http_proxy
   echo "\n切换工作目录到 /etc/lunchkit/cn_http_proxy"
-
+  sleep 0.25
   echo "检查是否安装 clang ..."
+  sleep 0.25
   if ! command -v clang &> /dev/null; then
     echo "clang 未安装，尝试安装 ..."
     run_command apt update
     run_command apt install clang -y
   else
     echo "clang 已安装。"
+    sleep 0.25
   fi
 
   echo "检查是否安装 make ..."
@@ -78,6 +88,7 @@ if [ "$installed" = "false" ]; then
   fi
 
   echo "\n即将开始编译 ..."
+  sleep 0.5
   make
   if [ $? -eq 0 ]; then
     echo "编译结束。"
