@@ -113,7 +113,9 @@ if [ "$installed" = "false" ]; then
       ;;
   esac
 
-  read -p "请选择 HTTP 代理端口 (默认 9000): " port
+  echo -e "\n请选择 HTTP 代理端口:\n1) 默认 (9000)\n2) 自定义"
+
+  read -p "请选择 (1 或 2): " port
   if [[ -z "$port" ]]; then
     port="9000"
     echo "使用默认端口 9000。"
