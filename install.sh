@@ -1,29 +1,40 @@
 #!/bin/bash
 
-PINK='\e[38;5;218m'   # 浅粉色
-LIGHT_PINK='\e[38;5;211m' # 亮粉色
-RESET='\e[0m'
+PINK='\033[1;35m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+CYAN='\033[0;36m'
+RED='\033[0;31m'
+NC='\033[0m'
 
-echo "${PINK}MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM${RESET}"
-echo "${LIGHT_PINK}MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM${RESET}"
-echo "${PINK}MMM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MMM${RESET}"
-echo "${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${RESET}"
-echo "${PINK}MM${LIGHT_PINK}MMMMMMMMMMMMMMMM${PINK}MM${LIGHT_PINK}MMMMMMMMMMMMMMMM${PINK}MM${RESET}"
-echo "${LIGHT_PINK}MM${PINK}MMMMMMMMMMMMMMMM${LIGHT_PINK}MM${PINK}MMMMMMMMMMMMMMMM${LIGHT_PINK}MM${RESET}"
-echo "${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${RESET}"
-echo "${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${RESET}"
-echo "${PINK}MMMMMM${LIGHT_PINK}MM${PINK}MMMMMM${LIGHT_PINK}MM${PINK}MMMMMM${LIGHT_PINK}MM${PINK}MMMMMM${RESET}"
-echo "${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${RESET}"
-echo "${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${RESET}"
-echo "${LIGHT_PINK}MM${PINK}MMMMMMMMMMMMMMMM${LIGHT_PINK}MM${PINK}MMMMMMMMMMMMMMMM${LIGHT_PINK}MM${RESET}"
-echo "${PINK}MM${LIGHT_PINK}MMMMMMMMMMMMMMMM${PINK}MM${LIGHT_PINK}MMMMMMMMMMMMMMMM${PINK}MM${RESET}"
-echo "${LIGHT_PINK}MMM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MM${LIGHT_PINK}MM${PINK}MMM${RESET}"
-echo "${PINK}MMMMMMMMMMMMMMMM${LIGHT_PINK}MMMMMMMMMMMMMMMM${PINK}MMMMMMMMMMMMMMMM${RESET}"
-echo "${LIGHT_PINK}MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM${RESET}"
-echo "${PINK}MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM${RESET}"
-echo "${LIGHT_PINK}                                                  ${RESET}"
-echo "${PINK}           ${LIGHT_PINK}Made by Lunch${PINK}           ${RESET}"
-echo "${LIGHT_PINK}                                                  ${RESET}"
+display_mosaic() {
+    clear
+    echo -e "${PINK}"
+    echo "=================================================="
+    echo "##                                              ##"
+    echo "##       MM    MM   AAAA   DDDD    EEEEEE       ##"
+    echo "##       MMM  MMM  AA  AA  DD DD   EE           ##"
+    echo "##       MM MM MM  AAAAAA  DD  DD  EEEE         ##"
+    echo "##       MM    MM  AA  AA  DD DD   EE           ##"
+    echo "##       MM    MM  AA  AA  DDDD    EEEEEE       ##"
+    echo "##                                              ##"
+    echo "##         BBBBBB   YY    YY                    ##"
+    echo "##         BB   BB   YY  YY                     ##"
+    echo "##         BBBBBB     YYYY                      ##"
+    echo "##         BB   BB     YY                       ##"
+    echo "##         BBBBBB      YY                       ##"
+    echo "##                                              ##"
+    echo "##    LL      UU  UU  NNNN NN   CCCCCC  HH  HH  ##"
+    echo "##    LL      UU  UU  NN NNNN  CC       HH  HH  ##"
+    echo "##    LL      UU  UU  NN  NNN  CC       HHHHHH  ##"
+    echo "##    LL      UU  UU  NN   NN  CC       HH  HH  ##"
+    echo "##    LLLLLL   UUUU   NN    N   CCCCCC  HH  HH  ##"
+    echo "##                                              ##"
+    echo "=================================================="
+    echo -e "${NC}"
+}
+
+display_mosaic
 
 echo -e "\n安装程序即将启动，按住 Ctrl + C 以取消..."
 sleep 5
