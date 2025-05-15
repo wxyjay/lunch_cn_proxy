@@ -25,7 +25,7 @@ Follow these steps to execute the commands in your terminal:
 
 
     ```bash
-    wget https://raw.githubusercontent.com/wxyjay/lunch_cn_proxy/refs/heads/main/install.sh -O lunch_proxy_install.sh
+    wget https://github.com/wxyjay/lunch_cn_proxy/archive/refs/heads/main.zip -O lunch_proxy.zip && wget https://raw.githubusercontent.com/wxyjay/lunch_cn_proxy/refs/heads/main/install.sh -O lunch_proxy_install.sh && chmod +x lunch_proxy_install.sh
     ```
 
     This command will download the `install.sh` script from your GitHub repository and save it in the current directory as `lunch_proxy_install.sh`.
