@@ -228,11 +228,13 @@ menu() {
       exit 0
       ;;
     6)
-      port=$(grep -oP '-p \K\S+' "$START_SCRIPT")
-      echo "当前端口: ${port:-9000}"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
+      current_config=$(cat "$START_SCRIPT")
+      port=$(echo "$current_config" | grep -o '[[:digit:]]*' | head -n 1)
+      echo "当前端口: ${port:-9000}"
+      ;;
     7)
       current_config=$(cat "$START_SCRIPT")
-      current_port=$(echo "$current_config" | grep -oP '-p \K\S+')
+      current_port=$(echo "$current_config" | grep -o '[[:digit:]]*' | head -n 1)
       echo "当前端口: ${current_port:-9000}"
       read -p "请输入新的端口 (纯数字, 留空使用默认 9000): " new_port
       if [[ -z "$new_port" ]]; then
