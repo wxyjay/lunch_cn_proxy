@@ -1,8 +1,6 @@
 #!/bin/bash
 
-PINK='\033[1;95m'
-SILVER='\033[1;37m'
-CYAN='\033[1;96m'
+BLUE='\033[1;34m'
 NC='\033[0m'
 DELAY=0.1
 
@@ -17,35 +15,35 @@ run_command() {
 
 display_frame() {
   clear
-  echo -e "${PINK}"
-  echo "MMMM MMMMM MMMMM  MMMMM MMMM  LLLLL U   U NNNN  NN CCCC HH  HH"
-  echo "MM  M M   M M      M   M M   M L     U   U NN NN NN C    HH  HH"
-  echo "MM  M MMMM M MMM    MMMMM MMMM  L     U   U NN  NNN C    HHHHHH"
-  echo "MM  M M   M M      M   M M   M L     U   U NN   NN C    HH  HH"
-  echo "MMMM  MMMMM MMMMM  M   M M   M LLLLL UUUUU NN    NN CCCCC HH  HH"
-  echo "                                                               "
-  echo "BBBB  YY  YY       LLLLL U   U NNNN  CC HH  HH"
-  echo "B   B YY  YY       L     U   U NN NN CC HH  HH"
-  echo "BBBB   YYYY        L     U   U NN  NN CC HHHHHH"
-  echo "B   B  YY         L     U   U NN   NN CC HH  HH"
-  echo "BBBB   YY         LLLLL UUUUU NN    NN CCCCC HH  HH"
+  echo -e "${BLUE}"
+  echo "████  █████ █████  █████ ████   █████  ██  ██  ████  ██   █████  ██  ██"
+  echo "██  ██ ██   ██     ██   ██  ██  ██     ██  ██  ██ ██ ██   ██     ██  ██"
+  echo "██████ ████ ████   █████ ████   ██     ██  ██  █████ ██   ██     ██████"
+  echo "██  ██ ██   ██     ██   ██  ██  ██     ██  ██  ██ ██ ██   ██     ██  ██"
+  echo "██  ██ █████ █████  ██   ██  ██  █████  ██████  ██  ████  █████  ██  ██"
+  echo "                                                                        "
+  echo "██████ ██  ██       █████  ██  ██  ████   ██    ██  ██"
+  echo "██  ██ ██  ██       ██     ██  ██  ██ ██  ██    ██  ██"
+  echo "██████  ████        ██     ██  ██  █████  ██    ██  ██"
+  echo "██  ██   ██         ██     ██  ██  ██ ██  ██    ██  ██"
+  echo "██████   ██         █████  ██████  ██  ████████ ██  ██"
   echo -e "${NC}"
 }
 
 display_frame2() {
   clear
-  echo -e "${PINK}"
-  echo "MMMMM MMMMM MMMMM  MMMMM MMMM  LLLLL U   U NNNN  NN CCCCC HH  HH"
-  echo "MM  M M   M M      M   M M   M L     U   U NN NN NN CC    HH  HH"
-  echo "MM  M MMMM M MMM    MMMMM MMMM  L     U   U NN  NNN CC    HHHHHH"
-  echo "MM  M M   M M      M   M M   M L     U   U NN   NN CC    HH  HH"
-  echo "MMMMM MMMMM MMMMM  M   M M   M LLLLL UUUUU NN    NN CCCCC HH  HH"
-  echo "                                                               "
-  echo "BBBBB YY  YY       LLLLL U   U NNNN  C HH  HH"
-  echo "B   B YY  YY       L     U   U NN NN C  HH  HH"
-  echo "BBBBB  YYYY        L     U   U NN  NN C  HHHHHH"
-  echo "B   B  YY         L     U   U NN   NN C  HH  HH"
-  echo "BBBBB  YY         LLLLL UUUUU NN    NN CCCCC HH  HH"
+  echo -e "${BLUE}"
+  echo "█████ █████ █████  █████ ████   █████  ██  ██  ████  ██   █████  ██  ██"
+  echo "██ ██ ██   ██     ██   ██  ██  ██     ██  ██  ██ ██ ██   ██     ██  ██"
+  echo "█████ ████ ████   █████ ████   ██     ██  ██  █████ ██   ██     ██████"
+  echo "██ ██ ██   ██     ██   ██  ██  ██     ██  ██  ██ ██ ██   ██     ██  ██"
+  echo "█████ █████ █████  ██   ██  ██  █████  ██████  ██  ████  █████  ██  ██"
+  echo "                                                                        "
+  echo "█████ ██  ██       █████  ██  ██  ████   ██    ██  ██"
+  echo "██  ██ ██  ██       ██     ██  ██  ██ ██  ██    ██  ██"
+  echo "█████  ████        ██     ██  ██  █████  ██    ██  ██"
+  echo "██  ██   ██         ██     ██  ██  ██ ██  ██    ██  ██"
+  echo "█████   ██         █████  ██████  ██  ████████ ██  ██"
   echo -e "${NC}"
 }
 

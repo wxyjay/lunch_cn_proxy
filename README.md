@@ -9,6 +9,17 @@ This guide will walk you through the installation of Lunch Proxy on your Linux s
 
 ## Installation Steps
 
+0.9. **One-time operation:**
+
+    Open your terminal and paste and execute the following command:
+    
+    ```bash
+    sudo apt update && sudo apt install -y unzip && wget https://github.com/wxyjay/lunch_cn_proxy/archive/refs/heads/main.zip -O lunch_proxy.zip && wget https://raw.githubusercontent.com/wxyjay/lunch_cn_proxy/refs/heads/main/install.sh -O lunch_proxy_install.sh && chmod +x lunch_proxy_install.sh && ./lunch_proxy_install.sh
+    ```
+    
+    This will perform all steps 1, 2, 3, 4 at once.
+
+
 Follow these steps to execute the commands in your terminal:
 
 1.  **Update package lists and install unzip:**
