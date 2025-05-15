@@ -144,14 +144,12 @@ if [ "$installed" = "false" ]; then
 
   echo -e "\n📜 创建 启动脚本：start.sh ..."
   sleep 0.25
-  cat > start.sh <<EOL
-#!/bin/bash
-if [ -z "$server_address" ]; then
-  ./thread_socket -p $port
-else
-  ./thread_socket -p $port -r $server_address
-fi
-EOL
+  echo "#!/bin/bash" > start.sh
+  if [ -z "$server_address" ]; then
+    echo "./thread_socket -p $port" >> start.sh
+  else
+    echo "./thread_socket -p $port -r $server_address" >> start.sh
+  fi
   chmod +x start.sh
 
 
@@ -247,11 +245,13 @@ menu() {
       read -n 1 -s -r -p "按 Enter 返回主菜单"; echo
       ;;
     7)
-      current_config=$(cat "$START_SCRIPT")
-      current_port_val=$(echo "$current_config" | grep -oP '(?<=-p )\d+' | head -n 1) # More robust port extraction
+      current_config_line=$(grep "^\./thread_socket" "$START_SCRIPT" | head -n 1)
+      current_port_val=$(echo "$current_config_line" | grep -oP '(?<=-p )\d+' | head -n 1)
+      # 提取当前的 "-r server_address" 部分 (如果存在)，注意包含前导空格
+      current_server_address_param=$(echo "$current_config_line" | grep -oP ' -r \S+' || echo "")
+
       echo "🔌 当前端口: ${current_port_val:-9000}"
       read -p "📝 请输入新的端口 (纯数字, 留空使用默认 9000): " new_port
-      original_server_address_param=$(echo "$current_config" | grep -oP ' -r \S+' || echo "") # Get server address part
 
       if [[ -z "$new_port" ]]; then
         new_port="9000"
@@ -260,37 +260,45 @@ menu() {
         echo "⚠️ 无效的端口，使用默认端口 9000。"
         new_port="9000"
       fi
+
       run_root_command systemctl stop "$SERVICE_NAME"
-      # Preserve server address if it exists
-      sed -i "s|^\(./thread_socket -p \)[0-9]*\(.*\)|\\1$new_port\\2|" "$START_SCRIPT"
+      # 重建命令: ./thread_socket -p <新端口><可选的服务器地址部分>
+      # $current_server_address_param 如果有值，会自带前导空格
+      sed -i "s|^\./thread_socket.*|./thread_socket -p $new_port${current_server_address_param}|" "$START_SCRIPT"
       echo "✅ 端口已修改为: $new_port"
+
+      if ! grep -q "^#!/bin/bash" "$START_SCRIPT"; then
+        sed -i '1s|^|#!/bin/bash\n|' "$START_SCRIPT"
+      fi
+      chmod +x "$START_SCRIPT"
       run_root_command systemctl start "$SERVICE_NAME"
       read -n 1 -s -r -p "按 Enter 返回主菜单"; echo ;;
     8)
-      current_config=$(cat "$START_SCRIPT")
-      current_server_address=$(echo "$current_config" | grep -oP '(?<=-r )\S+' || echo "无") # More robust address extraction
-      current_port_val_for_addr_change=$(echo "$current_config" | grep -oP '(?<=-p )\d+' | head -n 1) # Get current port for rebuilding the command
+      # 从 start.sh 中获取当前实际的命令行
+      current_config_line=$(grep "^\./thread_socket" "$START_SCRIPT" | head -n 1)
+      # 从这行命令中提取当前的端口号
+      current_port_val_for_addr_change=$(echo "$current_config_line" | grep -oP '(?<=-p )\d+' | head -n 1)
+      # 从这行命令中提取当前的服务器地址 (如果存在)
+      current_server_address=$(echo "$current_config_line" | grep -oP '(?<=-r )\S+' || echo "无")
 
       echo "🌐 当前服务器地址: ${current_server_address}"
       read -p "📝 请输入新的服务器地址 (留空则不使用远程服务器): " new_server_address
       run_root_command systemctl stop "$SERVICE_NAME"
+
       if [ -z "$new_server_address" ]; then
-        # Remove the -r part
-        sed -i "s|^\(./thread_socket -p $current_port_val_for_addr_change\).*-r \S*.*|\1|" "$START_SCRIPT"
-        # If -r was not there, ensure it's just -p port
-        sed -i "s|^\(./thread_socket -p $current_port_val_for_addr_change\).*|\1|" "$START_SCRIPT"
+        # 如果新地址为空，则移除 -r 参数，只保留 -p <端口>
+        sed -i "s|^\./thread_socket -p ${current_port_val_for_addr_change}.*|./thread_socket -p ${current_port_val_for_addr_change}|" "$START_SCRIPT"
         echo "🔩 服务器地址已移除 (使用本地代理)。"
       else
-        # Check if -r already exists
-        if grep -q -- "-r " "$START_SCRIPT"; then
-            # Replace existing -r value
-            sed -i "s|^\(./thread_socket -p $current_port_val_for_addr_change -r \)\S*|\1$new_server_address|" "$START_SCRIPT"
-        else
-            # Add -r value
-            sed -i "s|^\(./thread_socket -p $current_port_val_for_addr_change\)\(.*\)|\1 -r $new_server_address\2|" "$START_SCRIPT"
-        fi
+        # 如果新地址不为空，则设置为 -p <端口> -r <新地址>
+        sed -i "s|^\./thread_socket -p ${current_port_val_for_addr_change}.*|./thread_socket -p ${current_port_val_for_addr_change} -r ${new_server_address}|" "$START_SCRIPT"
         echo "✅ 服务器地址已修改为: $new_server_address"
       fi
+      # （可选但推荐）确保 shebang 存在并且脚本可执行
+      if ! grep -q "^#!/bin/bash" "$START_SCRIPT"; then
+        sed -i '1s|^|#!/bin/bash\n|' "$START_SCRIPT"
+      fi
+      chmod +x "$START_SCRIPT"
       run_root_command systemctl start "$SERVICE_NAME"
       read -n 1 -s -r -p "按 Enter 返回主菜单"; echo ;;
     q) exit 0 ;;
