@@ -206,7 +206,7 @@ menu() {
   read -p "请选择: " choice
   echo "您输入的字符是: '$choice'"
   choice=$(echo "$choice" | tr -d '[:space:]')
-
+  sleep 1
   case "$choice" in
     1) systemctl status "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
     2) run_root_command systemctl start "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
