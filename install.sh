@@ -203,7 +203,8 @@ menu() {
   echo "(q) 退出"
   echo "---------------------------------------------------------"
   read -p "请选择: " choice
-  choice=$(echo "$choice" | tr -d '[:space:]') # 移除所有空白字符
+  echo "您输入的字符是: '$choice'"
+  choice=$(echo "$choice" | tr -d '[:space:]')
 
   case "$choice" in
     1) systemctl status "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
