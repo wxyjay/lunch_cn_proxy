@@ -7,7 +7,6 @@ CYAN='\033[0;36m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-# 定义一个函数，用于执行命令，如果当前用户是 root 则不使用 sudo
 run_command() {
   if [ "$(id -u)" -eq 0 ]; then
     "$@"
@@ -18,29 +17,31 @@ run_command() {
 
 display_mosaic() {
   clear
-  echo -e "${PINK}"
-  echo "=================================================="
-  echo "##                                              ##"
-  echo "##   MM  MM   AAAA   DDDD  EEEEEE                ##"
-  echo "##   MMM MMM  AA AA  DD DD EE                    ##"
-  echo "##   MM MM MM AAAAAA DD  DD EEEE                  ##"
-  echo "##   MM  MM  AA AA  DD DD EE                    ##"
-  echo "##   MM  MM  AA AA  DDDD  EEEEEE                ##"
-  echo "##                                              ##"
-  echo "##   BBBBBB   YY  YY                             ##"
-  echo "##   BB   BB   YY YY                             ##"
-  echo "##   BBBBBB    YYYY                              ##"
-  echo "##   BB   BB    YY                               ##"
-  echo "##   BBBBBB    YY                               ##"
-  echo "##                                              ##"
-  echo "##   LL      UU UU NNNN NN CCCCCC HH  HH         ##"
-  echo "##   LL      UU UU NN NNNN CC     HH  HH         ##"
-  echo "##   LL      UU UU NN  NNN CC     HHHHHH         ##"
-  echo "##   LL      UU UU NN   NN CC     HH  HH         ##"
-  echo "##   LLLLLL   UUUU  NN    N CCCCCC HH  HH         ##"
-  echo "##                                              ##"
-  echo "=================================================="
-  echo -e "${NC}"
+
+  PINK='\033[1;35m'
+  NC='\033[0m'
+
+  lines=(
+"╔════════════════════════════════════════════════════════════╗"
+"║                                                            ║"
+"║   ${PINK}███╗   ███╗ █████╗ ██████╗ ███████╗██████╗     ${NC}           ║"
+"║   ${PINK}████╗ ████║██╔══██╗██╔══██╗██╔════╝██╔══██╗    ${NC}           ║"
+"║   ${PINK}██╔████╔██║███████║██║  ██║█████╗  ██████╔╝    ${NC}           ║"
+"║   ${PINK}██║╚██╔╝██║██╔══██║██║  ██║██╔══╝  ██╔══██╗    ${NC}           ║"
+"║   ${PINK}██║ ╚═╝ ██║██║  ██║██████╔╝███████╗██║  ██║    ${NC}           ║"
+"║   ${PINK}╚═╝     ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝    ${NC}           ║"
+"║                                                            ║"
+"║        ${PINK}MADE     BY     LUNCH${NC}                           ║"
+"║                                                            ║"
+"╚════════════════════════════════════════════════════════════╝"
+  )
+
+  for line in "${lines[@]}"; do
+    echo -e "$line"
+    sleep 0.05
+  done
+
+  echo
 }
 
 display_mosaic
@@ -223,6 +224,7 @@ menu() {
       run_root_command rm -rf "$PROXY_DIR"
       echo "删除 lunch_proxy 菜单..."
       run_root_command rm -f "$0"
+      run_root_command rm /usr/local/bin/lunch_proxy
       echo "卸载完成。"
       exit 0
       ;;
@@ -277,5 +279,5 @@ EOL
 chmod +x lunch_proxy
 sudo mv lunch_proxy /usr/local/bin/lunch_proxy
 sudo chmod +x /usr/local/bin/lunch_proxy
-echo "\n已创建 'lunch_proxy' 菜单。后续在终端中输入 './lunch_proxy' 即可打开菜单。"
-./lunch_proxy
+echo "\n已创建 'lunch_proxy' 菜单；后续在终端中输入 'lunch_proxy' 即可打开菜单。"
+lunch_proxy
