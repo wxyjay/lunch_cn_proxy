@@ -14,86 +14,86 @@ run_command() {
 }
 
 display_banner() {
-  cat << "EOF"
+    cat << "EOF"
 **********************************************
-* *
-* ✨ Welcome to Lunch Proxy Installer ✨       *
-* *
-* *
+*                                            *
+*        Welcome to Lunch Proxy Installer    *
+*                                            *
+*                                            *
 **********************************************
 EOF
-  echo
+    echo
 }
 clear
 display_banner
 
-echo -e "\n安装程序即将启动，按住 Ctrl + C 以取消... ⏳"
+echo -e "\n安装程序即将启动，按住 Ctrl + C 以取消..."
 sleep 5
 clear
 
-echo "检查是否已安装 cn_http_proxy 服务... 🤔"
+echo "检查是否已安装 cn_http_proxy 服务..."
 if systemctl is-enabled cn_http_proxy --quiet && systemctl is-active cn_http_proxy --quiet; then
-  echo "✅ cn_http_proxy 服务已安装并运行。"
+  echo "cn_http_proxy 服务已安装并运行。"
   sleep 1
   installed=true
 else
-  echo "❌ 未发现 cn_http_proxy 服务。"
+  echo "未发现 cn_http_proxy 服务。"
   sleep 0.5
   installed=false
 fi
 
 if [ "$installed" = "false" ]; then
 
-  echo "\n创建目录 /etc/lunchkit 和 /etc/lunchkit/cn_http_proxy ... 📂"
+  echo "\n创建目录 /etc/lunchkit 和 /etc/lunchkit/cn_http_proxy ..."
   run_command mkdir -p /etc/lunchkit/cn_http_proxy
   sleep 0.5
 
-  echo "解压 lunch_proxy.zip 到 /etc/lunchkit/cn_http_proxy ... 📦"
+  echo "解压 lunch_proxy.zip 到 /etc/lunchkit/cn_http_proxy ..."
   sleep 0.5
   if [ -f "lunch_proxy.zip" ]; then
-
+  
     run_command unzip -o lunch_proxy.zip -d temp_lunch_dir
     run_command cp -r temp_lunch_dir/lunch_cn_proxy-main/* /etc/lunchkit/cn_http_proxy/
     rm -rf temp_lunch_dir
 
-    echo "删除 lunch_proxy.zip ... 🗑️"
+    echo "删除 lunch_proxy.zip ..."
     sleep 0.5
     rm -f lunch_proxy.zip
   else
-    echo "🚨 错误: 当前目录下找不到 lunch_proxy.zip 文件，请确保该文件存在。"
+    echo "错误: 当前目录下找不到 lunch_proxy.zip 文件，请确保该文件存在。"
     exit 1
   fi
 
   cd /etc/lunchkit/cn_http_proxy
-  echo "\n切换工作目录到 /etc/lunchkit/cn_http_proxy ➡️"
+  echo "\n切换工作目录到 /etc/lunchkit/cn_http_proxy"
   sleep 0.25
-  echo "检查是否安装 clang ... 🛠️"
+  echo "检查是否安装 clang ..."
   sleep 0.25
   if ! command -v clang &> /dev/null; then
-    echo "clang 未安装，尝试安装 ... ⚙️"
+    echo "clang 未安装，尝试安装 ..."
     run_command apt update
     run_command apt install clang -y
   else
-    echo "✅ clang 已安装。"
+    echo "clang 已安装。"
     sleep 0.25
   fi
 
-  echo "检查是否安装 make ... 🛠️"
+  echo "检查是否安装 make ..."
   if ! command -v make &> /dev/null; then
-    echo "make 未安装，尝试安装 ... ⚙️"
+    echo "make 未安装，尝试安装 ..."
     run_command apt update
     run_command apt install make -y
   else
-    echo "✅ make 已安装。"
+    echo "make 已安装。"
   fi
 
-  echo "\n即将开始编译 ... ⏳"
+  echo "\n即将开始编译 ..."
   sleep 0.5
   make
   if [ $? -eq 0 ]; then
-    echo "✅ 编译结束。"
+    echo "编译结束。"
   else
-    echo "❌ 编译过程中发生错误，请检查错误信息。"
+    echo "编译过程中发生错误，请检查错误信息。"
     exit 1
   fi
 
@@ -102,13 +102,13 @@ if [ "$installed" = "false" ]; then
   server_address=""
   case "$server_choice" in
     1)
-      echo "👍 使用默认服务器地址。"
+      echo "使用默认服务器地址。"
       ;;
     2)
       read -p "请输入自定义服务器地址: " server_address
       ;;
     *)
-      echo "⚠️ 无效的选择，使用默认服务器地址。"
+      echo "无效的选择，使用默认服务器地址。"
       sleep 0.25
       ;;
   esac
@@ -118,13 +118,13 @@ if [ "$installed" = "false" ]; then
   read -p "请选择 (1 或 2): " port
   if [[ -z "$port" ]]; then
     port="9000"
-    echo "👍 使用默认端口 9000。"
+    echo "使用默认端口 9000。"
   elif [[ ! "$port" =~ ^[0-9]+$ ]]; then
-    echo "⚠️ 无效的端口，使用默认端口 9000。"
+    echo "无效的端口，使用默认端口 9000。"
     port="9000"
   fi
 
-  echo "\n创建 启动脚本：start.sh ... 📄"
+  echo "\n创建 启动脚本：start.sh ..."
   sleep 0.25
   cat > start.sh <<EOL
 #!/bin/bash
@@ -137,7 +137,7 @@ EOL
   chmod +x start.sh
 
 
-  echo "创建 systemd 服务 cn_http_proxy ... ⚙️"
+  echo "创建 systemd 服务 cn_http_proxy ..."
   cat > /etc/systemd/system/cn_http_proxy.service <<EOL
 [Unit]
 Description=cn_http_proxy
@@ -154,7 +154,7 @@ WantedBy=multi-user.target
 EOL
   run_command systemctl daemon-reload
 
-  echo "启动 cn_http_proxy 服务 ... ▶️"
+  echo "启动 cn_http_proxy 服务 ..."
   run_command systemctl enable cn_http_proxy
   run_command systemctl start cn_http_proxy
   run_command systemctl status cn_http_proxy
@@ -178,15 +178,15 @@ run_root_command() {
 
 menu() {
   echo "-------------------- Lunch CN Proxy 菜单 --------------------"
-  echo "(1) 服务信息 ℹ️"
-  echo "(2) 启动服务 ▶️"
-  echo "(3) 重启服务 🔄"
-  echo "(4) 停止服务 🛑"
-  echo "(5) 卸载服务 🗑️"
-  echo "(6) 查看当前端口 👂"
-  echo "(7) 修改服务器端口 ⚙️"
-  echo "(8) 修改服务器地址 🌐"
-  echo "(q) 退出 👋"
+  echo "(1) 服务信息"
+  echo "(2) 启动服务"
+  echo "(3) 重启服务"
+  echo "(4) 停止服务"
+  echo "(5) 卸载服务"
+  echo "(6) 查看当前端口"
+  echo "(7) 修改服务器端口"
+  echo "(8) 修改服务器地址"
+  echo "(q) 退出"
   echo "---------------------------------------------------------"
   choice=""
   read -p "请选择: " choice
@@ -199,24 +199,25 @@ menu() {
     3) run_root_command systemctl restart "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
     4) run_root_command systemctl stop "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
     5)
-      echo -e "停止 $SERVICE_NAME 服务... 🛑"
+      echo -e "停止 $SERVICE_NAME 服务..."
       run_root_command systemctl stop "$SERVICE_NAME"
-      echo "禁用 $SERVICE_NAME 服务... 🚫"
+      echo "禁用 $SERVICE_NAME 服务..."
       run_root_command systemctl disable "$SERVICE_NAME"
-      echo "删除 $SERVICE_NAME 服务文件... 🗑️"
+      echo "删除 $SERVICE_NAME 服务文件..."
       run_root_command rm -f /etc/systemd/system/"$SERVICE_NAME".service
-      echo "删除 $PROXY_DIR 目录... 🗑️"
+      echo "删除 $PROXY_DIR 目录..."
       run_root_command rm -rf "$PROXY_DIR"
-      echo "删除 lunch_proxy 菜单... 🗑️"
+      echo "删除 lunch_proxy 菜单..."
       run_root_command rm -f "$0"
       run_root_command rm /usr/local/bin/lunch_proxy
-      echo "✅ 卸载完成。"
+      echo "卸载完成。"
       exit 0
       ;;
     6)
       current_config=$(cat "$START_SCRIPT")
       port=$(echo "$current_config" | grep -o '[[:digit:]]*' | head -n 1)
-      echo "当前端口: ${port:-9000} 👂"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
+      echo "当前端口: ${port:-9000}"
+      read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
       ;;
     7)
       current_config=$(cat "$START_SCRIPT")
