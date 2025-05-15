@@ -7,31 +7,40 @@ CYAN='\033[0;36m'
 RED='\033[0;31m'
 NC='\033[0m'
 
+# 定义一个函数，用于执行命令，如果当前用户是 root 则不使用 sudo
+run_command() {
+  if [ "$(id -u)" -eq 0 ]; then
+    "$@"
+  else
+    sudo "$@"
+  fi
+}
+
 display_mosaic() {
-    clear
-    echo -e "${PINK}"
-    echo "=================================================="
-    echo "##                                              ##"
-    echo "##       MM    MM   AAAA   DDDD    EEEEEE       ##"
-    echo "##       MMM  MMM  AA  AA  DD DD   EE           ##"
-    echo "##       MM MM MM  AAAAAA  DD  DD  EEEE         ##"
-    echo "##       MM    MM  AA  AA  DD DD   EE           ##"
-    echo "##       MM    MM  AA  AA  DDDD    EEEEEE       ##"
-    echo "##                                              ##"
-    echo "##         BBBBBB   YY    YY                    ##"
-    echo "##         BB   BB   YY  YY                     ##"
-    echo "##         BBBBBB     YYYY                      ##"
-    echo "##         BB   BB     YY                       ##"
-    echo "##         BBBBBB      YY                       ##"
-    echo "##                                              ##"
-    echo "##    LL      UU  UU  NNNN NN   CCCCCC  HH  HH  ##"
-    echo "##    LL      UU  UU  NN NNNN  CC       HH  HH  ##"
-    echo "##    LL      UU  UU  NN  NNN  CC       HHHHHH  ##"
-    echo "##    LL      UU  UU  NN   NN  CC       HH  HH  ##"
-    echo "##    LLLLLL   UUUU   NN    N   CCCCCC  HH  HH  ##"
-    echo "##                                              ##"
-    echo "=================================================="
-    echo -e "${NC}"
+  clear
+  echo -e "${PINK}"
+  echo "=================================================="
+  echo "##                                              ##"
+  echo "##   MM  MM   AAAA   DDDD  EEEEEE                ##"
+  echo "##   MMM MMM  AA AA  DD DD EE                    ##"
+  echo "##   MM MM MM AAAAAA DD  DD EEEE                  ##"
+  echo "##   MM  MM  AA AA  DD DD EE                    ##"
+  echo "##   MM  MM  AA AA  DDDD  EEEEEE                ##"
+  echo "##                                              ##"
+  echo "##   BBBBBB   YY  YY                             ##"
+  echo "##   BB   BB   YY YY                             ##"
+  echo "##   BBBBBB    YYYY                              ##"
+  echo "##   BB   BB    YY                               ##"
+  echo "##   BBBBBB    YY                               ##"
+  echo "##                                              ##"
+  echo "##   LL      UU UU NNNN NN CCCCCC HH  HH         ##"
+  echo "##   LL      UU UU NN NNNN CC     HH  HH         ##"
+  echo "##   LL      UU UU NN  NNN CC     HHHHHH         ##"
+  echo "##   LL      UU UU NN   NN CC     HH  HH         ##"
+  echo "##   LLLLLL   UUUU  NN    N CCCCCC HH  HH         ##"
+  echo "##                                              ##"
+  echo "=================================================="
+  echo -e "${NC}"
 }
 
 display_mosaic
@@ -52,11 +61,11 @@ fi
 if [ "$installed" = "false" ]; then
 
   echo "\n创建目录 /etc/lunchkit 和 /etc/lunchkit/cn_http_proxy ..."
-  sudo mkdir -p /etc/lunchkit/cn_http_proxy
+  run_command mkdir -p /etc/lunchkit/cn_http_proxy
 
   echo "解压 lunch_proxy.zip 到 /etc/lunchkit/cn_http_proxy ..."
   if [ -f "lunch_proxy.zip" ]; then
-    sudo unzip -d /etc/lunchkit/cn_http_proxy lunch_proxy.zip
+    run_command unzip -d /etc/lunchkit/cn_http_proxy lunch_proxy.zip
 
     echo "删除 lunch_proxy.zip ..."
     rm -f lunch_proxy.zip
@@ -71,8 +80,8 @@ if [ "$installed" = "false" ]; then
   echo "检查是否安装 clang ..."
   if ! command -v clang &> /dev/null; then
     echo "clang 未安装，尝试安装 ..."
-    sudo apt update
-    sudo apt install clang -y
+    run_command apt update
+    run_command apt install clang -y
   else
     echo "clang 已安装。"
   fi
@@ -80,8 +89,8 @@ if [ "$installed" = "false" ]; then
   echo "检查是否安装 make ..."
   if ! command -v make &> /dev/null; then
     echo "make 未安装，尝试安装 ..."
-    sudo apt update
-    sudo apt install make -y
+    run_command apt update
+    run_command apt install make -y
   else
     echo "make 已安装。"
   fi
@@ -157,12 +166,12 @@ User=root
 [Install]
 WantedBy=multi-user.target
 EOL
-  sudo systemctl daemon-reload
+  run_command systemctl daemon-reload
 
   echo "启动 cn_http_proxy 服务 ..."
-  sudo systemctl enable cn_http_proxy
-  sudo systemctl start cn_http_proxy
-  sudo systemctl status cn_http_proxy
+  run_command systemctl enable cn_http_proxy
+  run_command systemctl start cn_http_proxy
+  run_command systemctl status cn_http_proxy
 fi
 
 cat > lunch_proxy <<EOL
@@ -171,6 +180,15 @@ cat > lunch_proxy <<EOL
 SERVICE_NAME="cn_http_proxy"
 START_SCRIPT="/etc/lunchkit/cn_http_proxy/start.sh"
 PROXY_DIR="/etc/lunchkit/cn_http_proxy"
+
+# 定义一个函数，用于执行需要 root 权限的命令
+run_root_command() {
+  if [ "$(id -u)" -eq 0 ]; then
+    "$@"
+  else
+    sudo "$@"
+  fi
+}
 
 menu() {
   echo "-------------------- Lunch CN Proxy 菜单 --------------------"
@@ -185,22 +203,24 @@ menu() {
   echo "(q) 退出"
   echo "---------------------------------------------------------"
   read -p "请选择: " choice
+  choice=$(echo "$choice" | tr -d '[:space:]') # 移除所有空白字符
+
   case "$choice" in
     1) systemctl status "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
-    2) sudo systemctl start "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
-    3) sudo systemctl restart "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
-    4) sudo systemctl stop "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
+    2) run_root_command systemctl start "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
+    3) run_root_command systemctl restart "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
+    4) run_root_command systemctl stop "$SERVICE_NAME"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
     5)
       echo -e "停止 $SERVICE_NAME 服务..."
-      sudo systemctl stop "$SERVICE_NAME"
+      run_root_command systemctl stop "$SERVICE_NAME"
       echo "禁用 $SERVICE_NAME 服务..."
-      sudo systemctl disable "$SERVICE_NAME"
+      run_root_command systemctl disable "$SERVICE_NAME"
       echo "删除 $SERVICE_NAME 服务文件..."
-      sudo rm -f /etc/systemd/system/"$SERVICE_NAME".service
+      run_root_command rm -f /etc/systemd/system/"$SERVICE_NAME".service
       echo "删除 $PROXY_DIR 目录..."
-      sudo rm -rf "$PROXY_DIR"
+      run_root_command rm -rf "$PROXY_DIR"
       echo "删除 lunch_proxy 菜单..."
-      sudo rm -f "$0"
+      run_root_command rm -f "$0"
       echo "卸载完成。"
       exit 0
       ;;
@@ -212,37 +232,37 @@ menu() {
       if [ -z "$server_address" ]; then
         echo "当前服务器地址: 默认"
         read -p "请输入新的服务器地址 (留空使用默认): " new_server_address
-        sudo systemctl stop "$SERVICE_NAME"
+        run_root_command systemctl stop "$SERVICE_NAME"
         if [ -z "$new_server_address" ]; then
           sed -i "s/.*-r .*/./thread_socket -p \\"$port\\"/g" "$START_SCRIPT"
         else
           echo "修改 $START_SCRIPT 中的服务器地址为: $new_server_address"
           sed -i "s/.*-r .*/./thread_socket -p \\"$port\\" -r \\"$new_server_address\\"/g" "$START_SCRIPT"
         fi
-        sudo systemctl start "$SERVICE_NAME"
+        run_root_command systemctl start "$SERVICE_NAME"
       else
         echo "当前服务器地址: $server_address"
         read -p "请输入新的服务器地址 (留空使用默认): " new_server_address
-        sudo systemctl stop "$SERVICE_NAME"
+        run_root_command systemctl stop "$SERVICE_NAME"
         if [ -z "$new_server_address" ]; then
           sed -i "s/.*-r .*/./thread_socket -p \\"$port\\"/g" "$START_SCRIPT"
         else
           echo "修改 $START_SCRIPT 中的服务器地址为: $new_server_address"
           sed -i "s/.*-r .*/./thread_socket -p \\"$port\\" -r \\"$new_server_address\\"/g" "$START_SCRIPT"
         fi
-        sudo systemctl start "$SERVICE_NAME"
+        run_root_command systemctl start "$SERVICE_NAME"
       fi
       read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
     8)
       read -p "请输入新的服务器地址 (留空使用默认): " new_server_address
-      sudo systemctl stop "$SERVICE_NAME"
+      run_root_command systemctl stop "$SERVICE_NAME"
       if [ -z "$new_server_address" ]; then
         sed -i "s/.*-r .*/./thread_socket -p \\"$port\\"/g" "$START_SCRIPT"
       else
         echo "修改 $START_SCRIPT 中的服务器地址为: $new_server_address"
         sed -i "s/.*-r .*/./thread_socket -p \\"$port\\" -r \\"$new_server_address\\"/g" "$START_SCRIPT"
       fi
-      sudo systemctl start "$SERVICE_NAME"
+      run_root_command systemctl start "$SERVICE_NAME"
       read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
     q) exit 0 ;;
     *) echo "无效的选项，请重试。"; read -n 1 -s -p "按 Enter 返回主菜单"; echo ;;
@@ -253,4 +273,5 @@ menu() {
 menu
 EOL
 chmod +x lunch_proxy
-echo "\n已创建 'lunch_proxy' 菜单。后续在终端中输入 'lunch_proxy' 即可打开菜单。"
+echo "\n已创建 'lunch_proxy' 菜单。后续在终端中输入 './lunch_proxy' 即可打开菜单。"
+./lunch_proxy
