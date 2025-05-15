@@ -1,11 +1,10 @@
 #!/bin/bash
 
-PINK='\033[1;35m'
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-CYAN='\033[0;36m'
-RED='\033[0;31m'
+PINK='\033[1;95m'
+SILVER='\033[1;37m'
+CYAN='\033[1;96m'
 NC='\033[0m'
+
 
 run_command() {
   if [ "$(id -u)" -eq 0 ]; then
@@ -15,30 +14,42 @@ run_command() {
   fi
 }
 
+print_animated_line() {
+  local line="$1"
+  echo -ne "${PINK}${line}${NC}\n"
+  sleep 0.05
+}
+
+
 display_mosaic() {
   clear
-
   lines=(
-"╔════════════════════════════════════════════════════════════╗"
-"║                                                            ║"
-"║   ${PINK}███╗   ███╗ █████╗ ██████╗ ███████╗██████╗     ${NC}           ║"
-"║   ${PINK}████╗ ████║██╔══██╗██╔══██╗██╔════╝██╔══██╗    ${NC}           ║"
-"║   ${PINK}██╔████╔██║███████║██║  ██║█████╗  ██████╔╝    ${NC}           ║"
-"║   ${PINK}██║╚██╔╝██║██╔══██║██║  ██║██╔══╝  ██╔══██╗    ${NC}           ║"
-"║   ${PINK}██║ ╚═╝ ██║██║  ██║██████╔╝███████╗██║  ██║    ${NC}           ║"
-"║   ${PINK}╚═╝     ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝    ${NC}           ║"
-"║                                                            ║"
-"║        ${PINK}MADE     BY     LUNCH${NC}                           ║"
-"║                                                            ║"
-"╚════════════════════════════════════════════════════════════╝"
+    "=================================================="
+    "##                                              ##"
+    "##   MM  MM   AAAA   DDDD  EEEEEE                ##"
+    "##   MMM MMM  AA AA  DD DD EE                    ##"
+    "##   MM MM MM AAAAAA DD  DD EEEE                  ##"
+    "##   MM  MM  AA AA  DD DD EE                    ##"
+    "##   MM  MM  AA AA  DDDD  EEEEEE                ##"
+    "##                                              ##"
+    "##   BBBBBB   YY  YY                             ##"
+    "##   BB   BB   YY YY                             ##"
+    "##   BBBBBB    YYYY                              ##"
+    "##   BB   BB    YY                               ##"
+    "##   BBBBBB    YY                               ##"
+    "##                                              ##"
+    "##   LL      UU UU NNNN NN CCCCCC HH  HH         ##"
+    "##   LL      UU UU NN NNNN CC     HH  HH         ##"
+    "##   LL      UU UU NN  NNN CC     HHHHHH         ##"
+    "##   LL      UU UU NN   NN CC     HH  HH         ##"
+    "##   LLLLLL   UUUU  NN    N CCCCCC HH  HH         ##"
+    "##                                              ##"
+    "=================================================="
   )
 
   for line in "${lines[@]}"; do
-    echo -e "$line"
-    sleep 0.05
+    print_animated_line "$line"
   done
-
-  echo
 }
 
 display_mosaic
