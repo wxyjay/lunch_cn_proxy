@@ -202,6 +202,7 @@ menu() {
   echo "(8) 修改服务器地址"
   echo "(q) 退出"
   echo "---------------------------------------------------------"
+  choice=""
   read -p "请选择: " choice
   echo "您输入的字符是: '$choice'"
   choice=$(echo "$choice" | tr -d '[:space:]')
